@@ -74,6 +74,16 @@ class TodoView(MethodView):
 
         return {"status": "success", "data": {"todo": self.schema().dump(todo)}}, 200
 
+    def delete(self, id):
+        todo = Todo.query.get(id)
+        if not todo:
+            return {"status": "error", "message": "Todo not found!"}, 404
+
+        db.session.delete(todo)
+        db.session.commit()
+
+        return {"status": "success", "message": "Todo deleted successfully!"}, 204
+
     def put(self, id):
         ...
 
