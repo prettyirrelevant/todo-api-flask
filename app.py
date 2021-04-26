@@ -4,7 +4,7 @@ from flask import Flask, request
 from flask.views import MethodView
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow import Schema, ValidationError, fields, post_load
+from marshmallow import Schema, ValidationError, fields
 from sqlalchemy import func
 
 BASE_DIR = path.dirname(path.abspath(__file__))
