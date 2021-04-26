@@ -36,3 +36,26 @@ class TodoSchema(Schema):
     @post_load
     def create_todo(self, data, **kwargs):
         return Todo(**data)
+
+
+class TodosView(MethodView):
+    schema = TodoSchema
+
+    def post(self):
+        request_data = request.get_json()
+
+        try:
+            new_todo = self.schema().load(request_data)
+        except ValidationError as error:
+            return {"status": "error", "message": error.messages}, 400
+
+        db.session.add(new_todo)
+        db.session.commit()
+
+        return {
+            "status": "success",
+            "data": {"message": "Todo added successfully!", "todo": self.schema().dump(new_todo)},
+        }, 201
+
+
+app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
