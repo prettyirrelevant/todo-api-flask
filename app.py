@@ -68,10 +68,11 @@ class TodoView(MethodView):
     schema = TodoSchema
 
     def get(self, id):
-        ...
+        todo = Todo.query.get(id)
+        if not todo:
+            return {"status": "error", "message": "Todo not found!"}, 404
 
-    def delete(self, id):
-        ...
+        return {"status": "success", "data": {"todo": self.schema().dump(todo)}}, 200
 
     def put(self, id):
         ...
