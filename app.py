@@ -64,4 +64,18 @@ class TodosView(MethodView):
         return {"status": "success", "data": {"todos": all_todos}}, 200
 
 
+class TodoView(MethodView):
+    schema = TodoSchema
+
+    def get(self, id):
+        ...
+
+    def delete(self, id):
+        ...
+
+    def put(self, id):
+        ...
+
+
 app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
+app.add_url_rule("/api/todos/<id>", view_func=TodoView.as_view("todo"))
