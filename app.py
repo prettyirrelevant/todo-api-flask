@@ -57,5 +57,11 @@ class TodosView(MethodView):
             "data": {"message": "Todo added successfully!", "todo": self.schema().dump(new_todo)},
         }, 201
 
+    def get(self):
+        query = Todo.query.all()
+        all_todos = self.schema(many=True).dump(query)
+
+        return {"status": "success", "data": {"todos": all_todos}}, 200
+
 
 app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
