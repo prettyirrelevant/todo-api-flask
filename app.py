@@ -33,10 +33,6 @@ class TodoSchema(Schema):
     is_completed = fields.Bool()
     timestamp = fields.DateTime(dump_only=True)
 
-    @post_load
-    def create_todo(self, data, **kwargs):
-        return Todo(**data)
-
 
 class TodosView(MethodView):
     schema = TodoSchema
@@ -49,6 +45,7 @@ class TodosView(MethodView):
         except ValidationError as error:
             return {"status": "error", "message": error.messages}, 400
 
+        new_todo = Todo(**new_todo)
         db.session.add(new_todo)
         db.session.commit()
 
@@ -83,9 +80,6 @@ class TodoView(MethodView):
         db.session.commit()
 
         return {"status": "success", "message": "Todo deleted successfully!"}, 204
-
-    def put(self, id):
-        ...
 
 
 app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
