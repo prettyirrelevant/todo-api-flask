@@ -81,6 +81,27 @@ class TodoView(MethodView):
 
         return {"status": "success", "message": "Todo deleted successfully!"}, 204
 
+    def put(self, id):
+        todo = Todo.query.get(id)
+        if not todo:
+            return {"status": "error", "message": "Todo not found!"}, 404
+
+        request_data = request.get_json()
+        try:
+            data = self.schema().load(request_data)
+        except ValidationError as error:
+            return {"status": "error", "message": error.messages}, 400
+
+        todo.content = data.get("content") or todo.content
+        todo.is_completed = data.get("is_completed") or todo.is_completed
+
+        db.session.commit()
+
+        return {
+            "status": "success",
+            "data": {"message": "Todo updated successfully!", "todo": self.schema().dump(todo)},
+        }, 200
+
 
 app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
 app.add_url_rule("/api/todos/<id>", view_func=TodoView.as_view("todo"))
