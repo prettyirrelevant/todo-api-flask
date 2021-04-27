@@ -103,5 +103,15 @@ class TodoView(MethodView):
         }, 200
 
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return {"status": "error", "message": "Not Found!"}, 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return {"status": "error", "message": "An unexpected error happened!"}, 500
+
+
 app.add_url_rule("/api/todos", view_func=TodosView.as_view("todos"))
 app.add_url_rule("/api/todos/<id>", view_func=TodoView.as_view("todo"))
